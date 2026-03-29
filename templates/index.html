@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% set entries = get_section(path="entries/_index.md") %}
+  {% set categories = get_taxonomy(kind="categories") %}
+  {% set_global published_count = 0 %}
+  {% set_global source_count = 0 %}
+  {% set_global video_count = 0 %}
+  {% set_global review_count = 0 %}
+
+  {% for item in entries.pages %}
+    {% if item.extra.status == "published" %}
+      {% set_global published_count = published_count + 1 %}
+      {% for source in item.extra.sources | default(value=[]) %}
+        {% set_global source_count = source_count + 1 %}
+        {% if source.kind == "video" %}
+          {% set_global video_count = video_count + 1 %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if item.extra.status == "under_review" %}
+      {% set_global review_count = review_count + 1 %}
+    {% endif %}
+  {% endfor %}
+
+  {% set_global hero_video_url = "" %}
+  {% set_global hero_video_label = "" %}
+  {% set_global stream_index = 0 %}
+
+  {% for featured in entries.pages %}
+    {% if featured.extra.status == "published" and featured.extra.featured | default(value=false) %}
+      {% set featured_title_highlight = featured.extra.title_highlight | default(value="") %}
+      {% set featured_title_markup = featured.title %}
+      {% set featured_title_replacement = "" %}
+
+      {% if featured_title_highlight != "" %}
+        {% set featured_title_replacement = "<span class=title-highlight>" ~ featured_title_highlight ~ "</span>" %}
+        {% set featured_title_markup = featured.title | replace(from=featured_title_highlight, to=featured_title_replacement) %}
+      {% endif %}
+
+      {% for source in featured.extra.sources | default(value=[]) %}
+        {% if hero_video_url == "" and source.kind == "video" %}
+          {% set_global hero_video_url = source.value %}
+          {% set_global hero_video_label = source.label %}
+        {% endif %}
+      {% endfor %}
+
+      <section
+        class="dossier-hero{% if hero_video_url != "" %} dossier-hero--has-media{% endif %}"
+        {% if hero_video_url != "" %}data-card-video-url="{{ hero_video_url }}"{% endif %}
+        {% if hero_video_label != "" %}data-card-video-label="{{ hero_video_label }}"{% endif %}
+      >
+        <div class="dossier-hero__copy">
+          <div>
+            <div class="dossier-hero__meta">
+              <span class="dossier-stamp">Declassified</span>
+              <span class="dossier-id">REF_ID: {{ featured.slug | upper }}</span>
+            </div>
+            <h1><a href="{{ featured.permalink }}">{{ featured_title_markup | safe }}</a></h1>
+            <p>{{ featured.description }}</p>
+          </div>
+          <div class="dossier-hero__actions">
+            <a class="dossier-button" href="{{ featured.permalink }}">Read Full Dossier</a>
+          </div>
+        </div>
+
+        {% if hero_video_url != "" %}
+          <a class="dossier-hero__media" href="{{ featured.permalink }}" aria-label="Open featured file and watch clip">
+            <div class="dossier-hero__media-frame">
+              <div class="entry-card__media-placeholder">Loading clip preview</div>
+            </div>
+            <div class="dossier-hero__overlay">
+              <span class="dossier-hero__overlay-label">INTEL_SOURCE: {{ hero_video_label }}</span>
+              <div class="dossier-hero__overlay-bar"><span></span></div>
+              <span class="dossier-hero__overlay-state">DECODING_PAYLOAD...</span>
+            </div>
+          </a>
+        {% endif %}
+      </section>
+    {% endif %}
+  {% endfor %}
+
+  <section class="intel-stats">
+    <div class="section-head section-head--brutalist">
+      <h2>Intel Stats</h2>
+      <span>SYSTEM_STATUS: NOMINAL</span>
+    </div>
+    <div class="intel-stats__grid">
+      <article class="intel-stat-card">
+        <span class="intel-stat-card__label">Total Exposure</span>
+        <strong>{{ published_count }} Files</strong>
+        <em>Published dossiers</em>
+      </article>
+      <article class="intel-stat-card intel-stat-card--alert">
+        <span class="intel-stat-card__label">Sources</span>
+        <strong>{{ source_count }}</strong>
+        <em>Verified references</em>
+      </article>
+      <article class="intel-stat-card">
+        <span class="intel-stat-card__label">Video Clips</span>
+        <strong>{{ video_count }}</strong>
+        <em>Watchable evidence</em>
+      </article>
+      <article class="intel-stat-card intel-stat-card--alert">
+        <span class="intel-stat-card__label">Review Queue</span>
+        <strong>{{ review_count }}</strong>
+        <em>Under review</em>
+      </article>
+    </div>
+  </section>
+
+  <section class="intel-layout">
+    <div class="intel-layout__main">
+      {% for p in entries.pages %}
+        {% set is_featured = p.extra.featured | default(value=false) %}
+        {% if p.extra.status == "published" and not is_featured %}
+          {% set_global stream_index = stream_index + 1 %}
+          {% if stream_index <= 2 %}
+            <article class="dossier-card{% if stream_index == 2 %} dossier-card--wide{% endif %}">
+              <div class="dossier-card__head">
+                <div>
+                  {% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}
+                    <span class="dossier-card__stamp">{{ p.taxonomies.severity.0 | upper }}</span>
+                  {% endif %}
+                  <h3><a href="{{ p.permalink }}">{{ p.title }}</a></h3>
+                </div>
+                <span class="dossier-card__timestamp">{{ p.date | date(format="%Y.%m.%d") }}</span>
+              </div>
+              <p>{{ p.description }}</p>
+              <div class="dossier-card__foot">
+                <div class="dossier-card__tags">
+                {% for cat in p.taxonomies.categories | default(value=[]) %}
+                  <a href="/entries/?category={{ cat | slugify }}">{{ cat }}</a>
+                {% endfor %}
+                </div>
+                <a href="{{ p.permalink }}">Access Full Report</a>
+              </div>
+            </article>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <aside class="intel-layout__rail">
+      <section class="intel-panel intel-panel--inverse">
+        <div class="intel-panel__head">
+          <span class="intel-panel__dot"></span>
+          <h3>Latest Public Files</h3>
+        </div>
+        <ul class="intel-alert-list">
+          {% for p in entries.pages %}
+            {% if p.extra.status == "published" and loop.index <= 4 %}
+              <li>
+                <span>{{ p.date | date(format="%H:%M:%S") }} — ALERT</span>
+                <a href="{{ p.permalink }}">{{ p.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+
+      <section class="intel-panel">
+        <div class="intel-panel__head">
+          <span class="intel-panel__dot"></span>
+          <h3>Related Dossiers</h3>
+        </div>
+        <ul class="intel-link-list intel-link-list--metrics">
+          {% for term in categories.items | slice(end=4) %}
+            {% set_global published_count = 0 %}
+            {% for p in term.pages %}
+              {% if p.extra.status == "published" %}
+                {% set_global published_count = published_count + 1 %}
+              {% endif %}
+            {% endfor %}
+            {% if published_count > 0 %}
+              <li>
+                <a href="/entries/?category={{ term.name | slugify }}">{{ term.name }}</a>
+                <span class="intel-link-list__count">{{ published_count }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+    </aside>
+  </section>
+
+  <section class="archive-listing">
+    <div class="section-head section-head--brutalist">
+      <h2>Archive Stream</h2>
+      <a href="/entries/">View all files</a>
+    </div>
+    <div class="card-grid card-grid--dossiers">
+      {% for p in entries.pages %}
+        {% if p.extra.status == "published" %}
+          {% include "partials/entry-card.html" %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endblock content %}

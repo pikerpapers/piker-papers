@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ config.description }}">
+  <title>
+    {% if page and page.title %}{{ page.title }} | {{ config.title }}
+    {% elif section and section.title %}{{ section.title }} | {{ config.title }}
+    {% else %}{{ config.title }}{% endif %}
+  </title>
+  <link rel="stylesheet" href="/site.css">
+  {% if config.extra.sentry_dsn %}
+    {% set sentry_public_key = config.extra.sentry_dsn | split(pat="://") | last | split(pat="@") | first %}
+    <script src="https://js.sentry-cdn.com/{{ sentry_public_key }}.min.js" crossorigin="anonymous"></script>
+    <script>
+      if (window.Sentry) {
+        Sentry.init({
+          dsn: "{{ config.extra.sentry_dsn }}",
+          {% if config.extra.sentry_environment %}environment: "{{ config.extra.sentry_environment }}",{% endif %}
+          tracesSampleRate: {{ config.extra.sentry_traces_sample_rate }},
+          sendDefaultPii: false
+        });
+      }
+    </script>
+  {% endif %}
+  {% if config.extra.ga4_measurement_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.ga4_measurement_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+      gtag("config", "{{ config.extra.ga4_measurement_id }}", {
+        anonymize_ip: true
+      });
+    </script>
+  {% endif %}
+  <script defer src="/js/card-media.js"></script>
+  <script defer src="/vendor/headroom.min.js"></script>
+  <script defer src="/js/header-scroll.js"></script>
+  {% block head %}{% endblock head %}
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <header class="site-header">
+    <div class="layout shell site-header__bar">
+      <div class="site-header__identity">
+        <a class="archive-brand" href="/" aria-label="The Piker Papers home">
+          <span class="archive-brand__badge" aria-hidden="true">
+            <span class="archive-brand__word">PIKER</span>
+            <span class="archive-brand__sep">_</span>
+            <span class="archive-brand__word">PAPERS</span>
+          </span>
+          <span class="visually-hidden">PIKER_PAPERS</span>
+        </a>
+      </div>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="/">Front Page</a>
+        <a href="/entries/">All Files</a>
+        <a href="/search/">Advanced Search</a>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="global-search" action="/search/" method="get" role="search" aria-label="Global site search">
+          <label for="global-search-query" class="visually-hidden">Search archive</label>
+          <div class="global-search__controls">
+            <input id="global-search-query" name="q" type="search" placeholder="SEARCH_ARCHIVE">
+            <button type="submit">Scan</button>
+          </div>
+        </form>
+        <a class="site-header__cta" href="/submit/">Submit File</a>
+      </div>
+    </div>
+
+    <div class="layout shell site-header__tagline-row">
+      <p class="site-header__tagline">Documenting the Radicalization Pipeline of Hasan Piker</p>
+    </div>
+  </header>
+
+  <main id="content" class="layout shell">
+    {% block content %}{% endblock content %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="layout shell site-footer__inner">
+      <div class="site-footer__system">
+        <span>STATIC_ARCHIVE</span>
+        <span class="site-footer__divider">//</span>
+        <span>ZOLA + PAGEFIND</span>
+        <span class="site-footer__divider">//</span>
+        <span class="site-footer__status">
+          <span class="site-footer__status-dot" aria-hidden="true"></span>
+          STATUS: PUBLIC
+        </span>
+      </div>
+      <div class="site-footer__links">
+        <a href="mailto:contact@pikerpapers.example">CONTACT</a>
+        <a href="https://github.com/example/piker-papers" target="_blank" rel="noreferrer noopener">GITHUB</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

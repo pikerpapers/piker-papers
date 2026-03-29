@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script defer src="/js/entries-filters.js"></script>
+{% endblock head %}
+
+{% block content %}
+  {% set entries_root = get_section(path="entries/_index.md") %}
+  {% set file_pages = paginator.pages | default(value=section.pages) %}
+  {% set_global published_total = 0 %}
+
+  {% for p in entries_root.pages %}
+    {% if p.extra.status == "published" %}
+      {% set_global published_total = published_total + 1 %}
+    {% endif %}
+  {% endfor %}
+
+  <article class="archive-files-page">
+    <header class="archive-files-head">
+      <div class="archive-files-head__copy">
+        <p class="archive-files-head__eyebrow">// SECURE_STORAGE / MASTER_ARCHIVE</p>
+        <h1>ALL_FILES</h1>
+        <p class="archive-files-head__summary">Access the central archive stream of published dossiers, clips, and transcripts. Filter by category below and sort the index by date or severity.</p>
+      </div>
+
+      <div class="archive-files-head__tools">
+        <p class="archive-files-head__stability">PUBLISHED_INDEX: {{ published_total }} FILES</p>
+        <div class="archive-files-sort" role="toolbar" aria-label="Archive sort controls">
+          <button class="archive-files-sort__button is-active" type="button" data-sort="date">SORT_BY_DATE</button>
+          <button class="archive-files-sort__button" type="button" data-sort="severity">SORT_BY_SEVERITY</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="archive-files-filters">
+      <div class="archive-files-filters__active">
+        <h2>ACTIVE_FILTERS</h2>
+        <div id="entries-active-filters" class="archive-files-active-list" aria-live="polite"></div>
+      </div>
+
+      <div class="archive-files-filters__controls">
+        <label class="archive-files-toggle">
+          <input type="checkbox" checked disabled>
+          <span>PUBLISHED_ONLY</span>
+        </label>
+
+        <div class="archive-files-viewmode" aria-label="Archive view mode">
+          <span>VIEW:</span>
+          <button class="archive-files-viewmode__button is-active" type="button" aria-pressed="true">LIST</button>
+          <button class="archive-files-viewmode__button" type="button" aria-pressed="false" disabled>GRID</button>
+        </div>
+      </div>
+
+      <div id="entries-category-filters" class="archive-files-filter-palette" aria-label="Category filters"></div>
+    </section>
+
+    <p id="entries-empty" class="archive-files-empty" hidden>No files match the current filter.</p>
+    <p id="entries-status" class="archive-files-status" aria-live="polite"></p>
+
+    <section id="entries-list" class="archive-records">
+      {% for p in file_pages %}
+        {% if p.extra.status == "published" %}
+          <article
+            class="archive-record"
+            data-entry-card
+            data-entry-categories="{% for cat in p.taxonomies.categories | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ cat | lower }}{% endfor %}"
+            data-entry-date="{{ p.date | date(format="%Y-%m-%d") }}"
+            data-entry-title="{{ p.title | upper }}"
+            data-entry-severity="{% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}{{ p.taxonomies.severity.0 | lower }}{% endif %}"
+          >
+            <div class="archive-record__identity">
+              <p class="archive-record__id">ARCHIVE_ID: PP-FILE-{{ p.slug | upper }}</p>
+              <h2><a href="{{ p.permalink }}">{{ p.title }}</a></h2>
+              <div class="archive-record__chips">
+                {% if p.taxonomies.entry_type and p.taxonomies.entry_type | length > 0 %}
+                  <span class="archive-record__chip archive-record__chip--solid">{{ p.taxonomies.entry_type.0 | replace(from="-", to="_") | upper }}</span>
+                {% endif %}
+                {% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}
+                  <span class="archive-record__chip archive-record__chip--outlined">{{ p.taxonomies.severity.0 | upper }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="archive-record__summary">
+              <p class="archive-record__label">INTEL_SUMMARY</p>
+              <p>{{ p.description }}</p>
+            </div>
+
+            <div class="archive-record__actions">
+              <p class="archive-record__meta">
+                TIMESTAMP: {{ p.date | date(format="%Y.%m.%d") }}<br>
+                {% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}
+                  {% set severity = p.taxonomies.severity.0 | lower %}
+                  {% if severity == "critical" %}
+                    SENSITIVITY: LEVEL_05
+                  {% elif severity == "high" %}
+                    SENSITIVITY: LEVEL_03
+                  {% elif severity == "medium" %}
+                    SENSITIVITY: LEVEL_02
+                  {% elif severity == "low" %}
+                    SENSITIVITY: LEVEL_01
+                  {% else %}
+                    SENSITIVITY: LEVEL_UNKNOWN
+                  {% endif %}
+                {% else %}
+                  SENSITIVITY: LEVEL_UNKNOWN
+                {% endif %}
+              </p>
+              <a class="archive-record__button" href="{{ p.permalink }}">OPEN_DOSSIER</a>
+            </div>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </section>
+
+    {% if paginator and paginator.number_pagers > 1 %}
+      <nav class="archive-files-pagination" aria-label="Files pagination">
+        <div class="archive-files-pagination__status">PAGE_INDEX: {{ paginator.current_index }} / {{ paginator.number_pagers }}</div>
+        <div class="archive-files-pagination__controls">
+          {% if paginator.previous %}
+            <a class="archive-files-pagination__button archive-files-pagination__button--muted" href="{{ paginator.previous }}">PREV_PAGE</a>
+          {% else %}
+            <span class="archive-files-pagination__button archive-files-pagination__button--disabled">PREV_PAGE</span>
+          {% endif %}
+
+          {% for pager in paginator.pagers %}
+            {% if pager.index >= paginator.current_index - 1 and pager.index <= paginator.current_index + 1 %}
+              {% if pager.index == paginator.current_index %}
+                <span class="archive-files-pagination__button archive-files-pagination__button--current">{{ pager.index }}</span>
+              {% else %}
+                <a class="archive-files-pagination__button archive-files-pagination__button--muted" href="{{ pager.permalink }}">{{ pager.index }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          {% if paginator.next %}
+            <a class="archive-files-pagination__button" href="{{ paginator.next }}">NEXT_PAGE</a>
+          {% else %}
+            <span class="archive-files-pagination__button archive-files-pagination__button--disabled">NEXT_PAGE</span>
+          {% endif %}
+        </div>
+      </nav>
+    {% endif %}
+  </article>
+{% endblock content %}

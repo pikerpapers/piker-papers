@@ -1,0 +1,33 @@
+base_url = "http://127.0.0.1:1111"
+title = "The Piker Papers"
+description = "Structured, searchable files with source-backed documentation."
+default_language = "en"
+compile_sass = true
+build_search_index = false
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+taxonomies = [
+  { name = "categories", paginate_by = 20, feed = true },
+  { name = "severity", paginate_by = 20, feed = true },
+  { name = "entry_type", paginate_by = 20, feed = true },
+  { name = "tags", paginate_by = 20, feed = true }
+]
+
+[markdown]
+render_emoji = false
+external_links_target_blank = true
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+
+[slugify]
+paths = "safe"
+taxonomies = "safe"
+anchors = "safe"
+
+[extra]
+ga4_measurement_id = "G-RFR1H71T4Y"
+sentry_dsn = ""
+sentry_environment = ""
+sentry_traces_sample_rate = 0.0

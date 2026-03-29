@@ -1,0 +1,6 @@
+public/
+.zola-cache/
+node_modules/
+.DS_Store
+.tools/tmp/
+local-submit-pipeline/

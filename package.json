@@ -1,0 +1,19 @@
+{
+  "name": "evidence-catalog-site",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local-first static evidence catalog built with Zola.",
+  "scripts": {
+    "sync:assets": "./scripts/sync-headroom.sh",
+    "dev": "npm run sync:assets && ./scripts/zola.sh serve --interface 127.0.0.1 --port 1111 --drafts",
+    "pagefind": "./node_modules/.bin/pagefind --site public --silent",
+    "build": "npm run sync:assets && ./scripts/zola.sh build && npm run pagefind",
+    "preview": "npm run sync:assets && ./scripts/zola.sh build && ./node_modules/.bin/pagefind --site public --serve",
+    "validate": "./scripts/validate-content.sh",
+    "check": "./scripts/validate-content.sh && npm run build"
+  },
+  "devDependencies": {
+    "headroom.js": "^0.12.0",
+    "pagefind": "^1.4.0"
+  }
+}

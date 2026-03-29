@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <article class="submit-page submit-page--protocol">
+    <div class="submit-status-banner" role="status" aria-live="polite">
+      <span>STATUS: UPCOMING FEATURE // ACCESS_PENDING</span>
+    </div>
+
+    <main class="submit-screen">
+      <section class="submit-screen__panel submit-screen__panel--form">
+        <div class="submit-screen__panel-inner">
+          <header class="submit-portal__header">
+            <div class="submit-portal__eyebrow-row">
+              <span class="submit-portal__badge">SECURE_UPLINK_TERMINAL</span>
+              <span class="submit-portal__station">STATION_ID: 00-PIKER-ALPHA</span>
+            </div>
+
+            <h1>FILE_INGESTION_V1</h1>
+
+            <div class="submit-portal__copy prose">
+              {{ page.content | safe }}
+            </div>
+          </header>
+
+          <form class="submit-portal__form" action="#" method="post">
+            <div class="submit-field">
+              <label for="submit-title">Dossier Title</label>
+              <input id="submit-title" type="text" placeholder="ENTER_IDENTIFIER" disabled aria-disabled="true">
+            </div>
+
+            <div class="submit-field-row">
+              <div class="submit-field">
+                <label for="submit-date">Subject Origin Point</label>
+                <input id="submit-date" type="date" disabled aria-disabled="true">
+              </div>
+
+              <div class="submit-field">
+                <label for="submit-clearance">Security Clearance Level</label>
+                <select id="submit-clearance" disabled aria-disabled="true">
+                  <option>CONFIDENTIAL</option>
+                  <option>SECRET</option>
+                  <option>TOP SECRET</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="submit-field-row">
+              <div class="submit-field">
+                <label for="submit-category">Archive Category</label>
+                <select id="submit-category" disabled aria-disabled="true">
+                  <option>PUBLIC_STATEMENTS</option>
+                  <option>PODCAST_APPEARANCE</option>
+                  <option>STREAM_CLIP</option>
+                  <option>SOCIAL_POST</option>
+                </select>
+              </div>
+
+              <div class="submit-field">
+                <label for="submit-tags">Tag Vectors</label>
+                <input id="submit-tags" type="text" placeholder="MESSAGING, RADICALIZATION, CLIP" disabled aria-disabled="true">
+              </div>
+            </div>
+
+            <div class="submit-field">
+              <label for="submit-summary">Archive Summary</label>
+              <textarea id="submit-summary" rows="4" placeholder="ENTER_HIGH_LEVEL_SUMMARY" disabled aria-disabled="true"></textarea>
+            </div>
+
+            <div class="submit-field">
+              <label for="submit-narrative">Analyst Narrative</label>
+              <textarea id="submit-narrative" rows="7" placeholder="ENTER_CONTEXT_AND_SUPPORTING_COPY" disabled aria-disabled="true"></textarea>
+            </div>
+
+            <div class="submit-field">
+              <label for="submit-sources">Primary Evidence Sources</label>
+              <textarea id="submit-sources" rows="4" placeholder="PASTE_YOUTUBE_LINKS,_ARCHIVE_URLS,_AND_TRANSCRIPT_REFERENCES" disabled aria-disabled="true"></textarea>
+            </div>
+
+            <div class="submit-field">
+              <label for="submit-upload">Raw Evidence Payload</label>
+              <div class="submit-upload submit-upload--disabled" id="submit-upload" aria-label="Upload evidence payload" aria-disabled="true">
+                <span class="submit-upload__icon">+</span>
+                <span class="submit-upload__copy">DRAG_DROP_OR_BROWSE_RAW_DATA</span>
+              </div>
+            </div>
+
+            <button class="submit-portal__action submit-portal__action--disabled" type="button" disabled>BEGIN_UPLINK</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="submit-screen__panel submit-screen__panel--preview">
+        <div class="submit-screen__panel-inner submit-screen__panel-inner--preview">
+          <div class="submit-preview-pane__head">
+            <h2>LIVE_ARCHIVE_PREVIEW</h2>
+            <span>REALTIME_SIMULATION</span>
+          </div>
+
+          <article class="submit-preview-card">
+            <div class="submit-preview-card__media">
+              <div class="submit-preview-card__stamp">[PREVIEW_STAMP]</div>
+            </div>
+
+            <div class="submit-preview-card__body">
+              <div class="submit-preview-card__title-row">
+                <h3>TITLE_PENDING_INGESTION</h3>
+                <div class="submit-preview-card__ref">
+                  <span>REF_ID</span>
+                  <strong>#PP-SUBMIT-LOCAL</strong>
+                </div>
+              </div>
+
+              <div class="submit-preview-card__meta">
+                <span>CONFIDENTIAL</span>
+                <span>ARCHIVE_NODE_7</span>
+              </div>
+
+              <div class="submit-preview-card__copy">
+                <p>SUBJECT IDENTIFIED AT COORDINATES <span class="submit-screen__redacted">CLASSIFIED_LOCATION</span>. INITIAL SURVEILLANCE INDICATES HIGH SIGNAL POTENTIAL WITHIN THE CURRENT DISCOURSE CYCLE.</p>
+                <p>PER PROTOCOL-00, ALL REVIEWERS SHOULD VERIFY SOURCE CHAIN, CLIP TIMESTAMPS, AND SUPPORTING CONTEXT BEFORE UPLINKING TO THE STATIC RECORD.</p>
+                <div class="submit-preview-card__bars">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+
+              <div class="submit-preview-card__footer">
+                <div class="submit-preview-card__icons" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span>END_OF_PREVIEW_STREAM</span>
+              </div>
+            </div>
+          </article>
+
+          <section class="submit-preview-pane__protocol">
+            <div class="submit-preview-pane__protocol-head">
+              <span>PROTOCOL-00</span>
+              <div></div>
+            </div>
+            <p>INTAKE QUEUE DISABLED PENDING WORKFLOW ACTIVATION.</p>
+          </section>
+        </div>
+      </section>
+    </main>
+  </article>
+{% endblock content %}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script defer src="/js/video-sources.js"></script>
+{% endblock head %}
+
+{% block content %}
+  {% set is_indexed = page.extra.status == "published" %}
+  {% set title_highlight = page.extra.title_highlight | default(value="") %}
+  {% set title_markup = page.title %}
+  {% set title_replacement = "" %}
+  {% set_global lead_video_url = "" %}
+  {% set_global lead_video_label = "" %}
+  {% set_global lead_video_start = 0 %}
+
+  {% if title_highlight != "" %}
+    {% set title_replacement = "<span class=title-highlight>" ~ title_highlight ~ "</span>" %}
+    {% set title_markup = page.title | replace(from=title_highlight, to=title_replacement) %}
+  {% endif %}
+
+  {% for source in page.extra.sources | default(value=[]) %}
+    {% if lead_video_url == "" and source.kind == "video" %}
+      {% set_global lead_video_url = source.value %}
+      {% set_global lead_video_label = source.label %}
+      {% set_global lead_video_start = source.start_seconds | default(value=0) %}
+    {% endif %}
+  {% endfor %}
+
+  <article class="dossier-page">
+    <aside class="dossier-page__meta">
+      <section class="dossier-panel dossier-panel--meta">
+        <div class="dossier-panel__group">
+          <p class="dossier-panel__label dossier-panel__label--primary">Dossier ID</p>
+          <p class="dossier-panel__value dossier-panel__value--id">PP-FILE-{{ page.slug | upper }}</p>
+        </div>
+
+        <div class="dossier-panel__cluster">
+          {% if page.taxonomies.severity and page.taxonomies.severity | length > 0 %}
+            <div class="dossier-panel__group">
+              <p class="dossier-panel__label">Threat Level</p>
+              <span class="dossier-panel__stamp">{{ page.taxonomies.severity.0 | upper }}</span>
+            </div>
+          {% endif %}
+
+          <div class="dossier-panel__group">
+            <p class="dossier-panel__label">Status</p>
+            <p class="dossier-panel__status">
+              <span class="dossier-panel__status-dot" aria-hidden="true"></span>
+              {% if page.extra.status == "retracted" %}
+                Retracted
+              {% elif page.extra.status == "under_review" %}
+                Under Review
+              {% else %}
+                Active Surveillance
+              {% endif %}
+            </p>
+          </div>
+
+          {% if page.taxonomies.categories | default(value=[]) | length > 0 %}
+            <div class="dossier-panel__group">
+              <p class="dossier-panel__label">Target Vector</p>
+              <ul class="dossier-panel__list dossier-panel__list--lined">
+                {% for cat in page.taxonomies.categories | default(value=[]) %}
+                  <li><a href="/entries/?category={{ cat | slugify }}">{{ cat }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="dossier-actions">
+        <h2>Actions</h2>
+        {% if lead_video_url != "" %}
+          <a class="dossier-button dossier-button--alert" href="#lead-clip">Watch Source Clip</a>
+        {% endif %}
+        <a class="dossier-button dossier-button--dark" href="#sources">Review Sources</a>
+      </section>
+
+      <section class="dossier-panel dossier-panel--seal">
+        <a class="archive-brand archive-brand--panel" href="/" aria-label="The Piker Papers home">
+          <span class="archive-brand__badge" aria-hidden="true">
+            <span class="archive-brand__word">PIKER</span>
+            <span class="archive-brand__sep">_</span>
+            <span class="archive-brand__word">PAPERS</span>
+          </span>
+          <span class="visually-hidden">PIKER_PAPERS</span>
+        </a>
+        <p>This document contains source-backed material prepared for review, citation, and cross-reference inside the archive.</p>
+      </section>
+    </aside>
+
+    <div class="dossier-page__main">
+      {% if page.extra.status == "retracted" %}
+        <aside class="status-banner status-banner--retracted">
+          This file is retracted and hidden from default search and listings.
+        </aside>
+      {% endif %}
+
+      {% if page.extra.status == "under_review" %}
+        <aside class="status-banner status-banner--review">
+          This file is under review and not intended for public publishing.
+        </aside>
+      {% endif %}
+
+      <header class="dossier-title-block entry-page__header">
+        <div class="dossier-title-block__head">
+          <h1 {% if is_indexed %}data-pagefind-meta="title"{% endif %}>{{ title_markup | safe }}</h1>
+          <span class="dossier-title-block__index">01</span>
+        </div>
+        {% if is_indexed %}
+          <span class="visually-hidden" data-pagefind-meta="date">{{ page.date | date(format="%Y-%m-%d") }}</span>
+          <span class="visually-hidden" data-pagefind-meta="record_id">PP-FILE-{{ page.slug | upper }}</span>
+          {% if page.taxonomies.categories | default(value=[]) | length > 0 %}
+            <span class="visually-hidden" data-pagefind-meta="category">{{ page.taxonomies.categories.0 }}</span>
+          {% endif %}
+          {% if page.taxonomies.severity | default(value=[]) | length > 0 %}
+            <span class="visually-hidden" data-pagefind-meta="severity">{{ page.taxonomies.severity.0 }}</span>
+          {% endif %}
+          {% if page.taxonomies.entry_type | default(value=[]) | length > 0 %}
+            <span class="visually-hidden" data-pagefind-meta="type">{{ page.taxonomies.entry_type.0 }}</span>
+          {% endif %}
+          {% if lead_video_url != "" %}
+            <span class="visually-hidden" data-pagefind-meta="media_url">{{ lead_video_url }}</span>
+          {% endif %}
+        {% endif %}
+      </header>
+
+      <section class="dossier-lead{% if lead_video_url != "" %} dossier-lead--split{% endif %}">
+        {% if lead_video_url != "" %}
+          <div
+            id="lead-clip"
+            class="video-source dossier-lead__media"
+            data-video-url="{{ lead_video_url }}"
+            data-video-label="{{ lead_video_label }}"
+            data-start="{{ lead_video_start }}"
+          >
+            <p class="video-source__pending">Preparing embedded playback...</p>
+          </div>
+        {% endif %}
+
+        <div class="dossier-lead__copy">
+          {% if page.description %}
+            <p class="entry-page__summary" {% if is_indexed %}data-pagefind-meta="summary"{% endif %}>{{ page.description }}</p>
+          {% endif %}
+          {% if page.taxonomies.tags | default(value=[]) | length > 0 %}
+            <ul class="dossier-inline-tags" {% if is_indexed %}data-pagefind-ignore{% endif %}>
+              {% for tag in page.taxonomies.tags | default(value=[]) %}
+                <li><a href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="dossier-copy prose" {% if is_indexed %}data-pagefind-body{% endif %}>
+        {{ page.content | safe }}
+      </section>
+
+      <section id="sources" class="dossier-sources sources" {% if is_indexed %}data-pagefind-body{% endif %}>
+        <div class="dossier-associated__head">
+          <h2>Associated Intel</h2>
+        </div>
+        <div class="dossier-associated__grid">
+          {% for source in page.extra.sources %}
+            <article
+              class="intel-source-card{% if source.kind == "video" %} intel-source-card--video{% endif %}"
+              {% if source.kind == "video" %}data-card-video-url="{{ source.value }}"{% endif %}
+              {% if source.kind == "video" %}data-card-video-label="{{ source.label }}"{% endif %}
+            >
+              <a class="intel-source-card__link" href="{{ source.value }}" target="_blank" rel="noreferrer noopener">
+                <div class="intel-source-card__media">
+                  <div class="intel-source-card__media-frame">
+                    {% if source.kind == "video" %}
+                      <div class="entry-card__media-placeholder">Loading source preview</div>
+                    {% else %}
+                      <span class="intel-source-card__kindmark">{{ source.kind | upper }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="intel-source-card__body">
+                  <p class="intel-source-card__id">INTEL_{{ loop.index }}</p>
+                  <h3>{{ source.label }}</h3>
+                  <p class="intel-source-card__summary">
+                    {% if source.kind == "video" and lead_video_url != "" and source.value == lead_video_url and source.label == lead_video_label %}
+                      Lead clip featured above.
+                    {% elif source.kind == "video" %}
+                      Timestamped clip available in source archive.
+                    {% else %}
+                      Open supporting source material in a new tab.
+                    {% endif %}
+                  </p>
+                </div>
+              </a>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <aside class="dossier-page__rail">
+      <div class="dossier-rail">
+        <div class="dossier-rail__item dossier-rail__item--active">
+          <span>{{ page.date | date(format="%Y.%m.%d") }}</span>
+          <p>File entered archive stream</p>
+        </div>
+        {% for source in page.extra.sources | default(value=[]) %}
+          <div class="dossier-rail__item">
+            <span>{{ source.kind | upper }}</span>
+            <p>{{ source.label }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </aside>
+  </article>
+{% endblock content %}

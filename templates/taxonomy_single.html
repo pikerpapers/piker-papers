@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {% if taxonomy.name == "categories" %}
+    <meta http-equiv="refresh" content="0; url=/entries/?category={{ term.name | slugify }}">
+  {% endif %}
+{% endblock head %}
+
+{% block content %}
+  {% if taxonomy.name == "categories" %}
+    <section class="section-head">
+      <h1>{{ term.name }}</h1>
+      <p>Category browsing now lives inside the All Files archive view.</p>
+      <a href="/entries/?category={{ term.name | slugify }}">Open filtered files</a>
+    </section>
+  {% else %}
+    <section class="section-head">
+      <h1>{{ taxonomy.name | capitalize }}: {{ term.name }}</h1>
+      <a href="/{{ taxonomy.name }}/">Back to {{ taxonomy.name }}</a>
+    </section>
+
+    <section class="card-grid">
+      {% for p in term.pages %}
+        {% if p.extra.status == "published" %}
+          {% include "partials/entry-card.html" %}
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% endif %}
+{% endblock content %}

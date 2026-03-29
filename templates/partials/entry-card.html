@@ -1,0 +1,67 @@
+{% set_global has_video = false %}
+{% set_global has_document = false %}
+{% set_global has_archive = false %}
+{% set_global first_video_url = "" %}
+{% set_global first_video_label = "" %}
+{% for source in p.extra.sources | default(value=[]) %}
+  {% if source.kind == "video" %}
+    {% set_global has_video = true %}
+    {% if first_video_url == "" %}
+      {% set_global first_video_url = source.value %}
+      {% set_global first_video_label = source.label %}
+    {% endif %}
+  {% endif %}
+  {% if source.kind == "document" %}
+    {% set_global has_document = true %}
+  {% endif %}
+  {% if source.kind == "archive" %}
+    {% set_global has_archive = true %}
+  {% endif %}
+{% endfor %}
+
+<article
+  class="entry-card{% if has_video %} entry-card--has-media{% endif %}"
+  data-entry-card
+  data-entry-categories="{% for cat in p.taxonomies.categories | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ cat | lower }}{% endfor %}"
+  {% if has_video and first_video_url %}data-card-video-url="{{ first_video_url }}"{% endif %}
+  {% if has_video and first_video_label %}data-card-video-label="{{ first_video_label }}"{% endif %}
+>
+  <div class="entry-card__body">
+    <div class="entry-card__meta">
+      {% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}
+        <span class="entry-card__flag">{{ p.taxonomies.severity.0 | upper }}</span>
+      {% endif %}
+      {% if has_video %}
+        <span class="entry-card__signal">Video</span>
+      {% elif has_document %}
+        <span class="entry-card__signal">Document</span>
+      {% elif has_archive %}
+        <span class="entry-card__signal">Archive</span>
+      {% endif %}
+    </div>
+
+    <h3><a href="{{ p.permalink }}">{{ p.title }}</a></h3>
+
+    {% if p.description %}
+      <p>{{ p.description }}</p>
+    {% endif %}
+
+    <div class="entry-card__foot">
+      <ul class="entry-card__tags" aria-label="File metadata">
+        {% for cat in p.taxonomies.categories | default(value=[]) %}
+          <li>{{ cat }}</li>
+        {% endfor %}
+      </ul>
+      <a class="entry-card__link" href="{{ p.permalink }}">Access</a>
+    </div>
+  </div>
+
+  {% if has_video and first_video_url %}
+    <a class="entry-card__media" href="{{ p.permalink }}" aria-label="Open file and watch clip">
+      <span class="entry-card__media-badge">Clip</span>
+      <div class="entry-card__media-frame">
+        <div class="entry-card__media-placeholder">Loading clip preview</div>
+      </div>
+    </a>
+  {% endif %}
+</article>

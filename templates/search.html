@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script defer src="/js/search.js"></script>
+{% endblock head %}
+
+{% block content %}
+  <article class="deep-search-page">
+    <section class="deep-search-hero">
+      <div class="deep-search-hero__inner">
+        <div class="deep-search-hero__head">
+          <span class="deep-search-hero__eyebrow">FULL-TEXT ARCHIVE SEARCH</span>
+          <h1>DEEP_SEARCH</h1>
+        </div>
+
+        <div class="deep-search-query">
+          <label class="visually-hidden" for="archive-search-query">Enter archive query</label>
+          <span class="deep-search-query__prompt" aria-hidden="true">&gt;</span>
+          <input
+            id="archive-search-query"
+            type="search"
+            placeholder="ENTER_QUERY_OR_SUBJECT_ID..."
+            autocomplete="off"
+          >
+          <button id="archive-search-submit" type="button">Execute</button>
+        </div>
+
+        <div class="deep-search-suggestions">
+          <span>SUGGESTED_NODES:</span>
+          <div id="search-suggestions" class="deep-search-suggestions__list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="deep-search-results">
+      <div class="deep-search-results__head">
+        <div>
+          <h2>Declassified Results</h2>
+          <p id="pagefind-status" class="deep-search-status" aria-live="polite"></p>
+        </div>
+
+        <div class="deep-search-results__controls">
+          <button id="search-filter-toggle" class="deep-search-control" type="button" aria-expanded="false">
+            Filter Nodes
+          </button>
+          <button id="search-sort-button" class="deep-search-control" type="button">
+            Sort: Relevance
+          </button>
+        </div>
+      </div>
+
+      <aside id="search-filters" class="deep-search-filters" aria-label="Search filters" hidden></aside>
+
+      <p id="search-empty" class="search-empty deep-search-empty" hidden></p>
+      <section id="search-results" class="deep-search-results-grid" aria-live="polite"></section>
+    </section>
+  </article>
+{% endblock content %}
