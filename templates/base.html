@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="{{ lang }}">
 <head>
+  {% set home_url = config.base_url ~ "/" %}
+  {% set entries_url = config.base_url ~ "/entries/" %}
+  {% set search_url = config.base_url ~ "/search/" %}
+  {% set submit_url = config.base_url ~ "/submit/" %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ config.description }}">
@@ -9,7 +13,7 @@
     {% elif section and section.title %}{{ section.title }} | {{ config.title }}
     {% else %}{{ config.title }}{% endif %}
   </title>
-  <link rel="stylesheet" href="/site.css">
+  <link rel="stylesheet" href="{{ config.base_url }}/site.css">
   {% if config.extra.sentry_dsn and config.extra.sentry_loader_src %}
     <script src="{{ config.extra.sentry_loader_src }}" crossorigin="anonymous"></script>
     <script>
@@ -47,9 +51,9 @@
       });
     </script>
   {% endif %}
-  <script defer src="/js/card-media.js"></script>
-  <script defer src="/vendor/headroom.min.js"></script>
-  <script defer src="/js/header-scroll.js"></script>
+  <script defer src="{{ config.base_url }}/js/card-media.js"></script>
+  <script defer src="{{ config.base_url }}/vendor/headroom.min.js"></script>
+  <script defer src="{{ config.base_url }}/js/header-scroll.js"></script>
   <script>
     function updateFooterTimestamp() {
       const timestamp = document.querySelector("[data-footer-timestamp]");
@@ -81,7 +85,7 @@
   <header class="site-header">
     <div class="layout shell site-header__bar">
       <div class="site-header__identity">
-        <a class="archive-brand" href="/" aria-label="The Piker Papers home">
+        <a class="archive-brand" href="{{ home_url }}" aria-label="The Piker Papers home">
           <span class="archive-brand__badge" aria-hidden="true">
             <span class="archive-brand__word">PIKER</span>
             <span class="archive-brand__sep">_</span>
@@ -92,20 +96,20 @@
       </div>
 
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="/">Front Page</a>
-        <a href="/entries/">All Files</a>
-        <a href="/search/">Advanced Search</a>
+        <a href="{{ home_url }}">Front Page</a>
+        <a href="{{ entries_url }}">All Files</a>
+        <a href="{{ search_url }}">Advanced Search</a>
       </nav>
 
       <div class="site-header__actions">
-        <form class="global-search" action="/search/" method="get" role="search" aria-label="Global site search">
+        <form class="global-search" action="{{ search_url }}" method="get" role="search" aria-label="Global site search">
           <label for="global-search-query" class="visually-hidden">Search archive</label>
           <div class="global-search__controls">
             <input id="global-search-query" name="q" type="search" placeholder="SEARCH_ARCHIVE">
             <button type="submit">Scan</button>
           </div>
         </form>
-        <a class="site-header__cta" href="/submit/">Submit File</a>
+        <a class="site-header__cta" href="{{ submit_url }}">Submit File</a>
       </div>
     </div>
 

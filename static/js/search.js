@@ -8,8 +8,22 @@
   const suggestionsRoot = document.getElementById("search-suggestions");
   const filterToggle = document.getElementById("search-filter-toggle");
   const sortButton = document.getElementById("search-sort-button");
+  const pagefindJsUrl = window.__PAGEFIND_JS_URL;
+  const pagefindBaseUrl = window.__PAGEFIND_BASE_URL;
 
-  if (!queryInput || !submitButton || !filtersRoot || !resultsRoot || !emptyRoot || !statusRoot || !suggestionsRoot || !filterToggle || !sortButton) {
+  if (
+    !queryInput ||
+    !submitButton ||
+    !filtersRoot ||
+    !resultsRoot ||
+    !emptyRoot ||
+    !statusRoot ||
+    !suggestionsRoot ||
+    !filterToggle ||
+    !sortButton ||
+    !pagefindJsUrl ||
+    !pagefindBaseUrl
+  ) {
     return;
   }
 
@@ -440,8 +454,8 @@
 
   const initialize = async () => {
     try {
-      pagefind = await import("/pagefind/pagefind.js");
-      await pagefind.options({ bundlePath: "/pagefind/" });
+      pagefind = await import(pagefindJsUrl);
+      await pagefind.options({ bundlePath: pagefindBaseUrl });
       filterIndex = await pagefind.filters();
       updateControls();
       renderSuggestions();

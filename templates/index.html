@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+  {% set entries_url = config.base_url ~ "/entries/" %}
   {% set entries = get_section(path="entries/_index.md") %}
   {% set categories = get_taxonomy(kind="categories") %}
   {% set_global published_count = 0 %}
@@ -131,7 +132,7 @@
               <div class="dossier-card__foot">
                 <div class="dossier-card__tags">
                 {% for cat in p.taxonomies.categories | default(value=[]) %}
-                  <a href="/entries/?category={{ cat | slugify }}">{{ cat }}</a>
+                  <a href="{{ entries_url }}?category={{ cat | slugify }}">{{ cat }}</a>
                 {% endfor %}
                 </div>
                 <a href="{{ p.permalink }}">Access Full Report</a>
@@ -175,7 +176,7 @@
             {% endfor %}
             {% if published_count > 0 %}
               <li>
-                <a href="/entries/?category={{ term.name | slugify }}">{{ term.name }}</a>
+                <a href="{{ entries_url }}?category={{ term.name | slugify }}">{{ term.name }}</a>
                 <span class="intel-link-list__count">{{ published_count }}</span>
               </li>
             {% endif %}
@@ -188,7 +189,7 @@
   <section class="archive-listing">
     <div class="section-head section-head--brutalist">
       <h2>Archive Stream</h2>
-      <a href="/entries/">View all files</a>
+      <a href="{{ entries_url }}">View all files</a>
     </div>
     <div class="card-grid card-grid--dossiers">
       {% for p in entries.pages %}

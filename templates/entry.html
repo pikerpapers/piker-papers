@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block head %}
-  <script defer src="/js/video-sources.js"></script>
+  <script defer src="{{ config.base_url }}/js/video-sources.js"></script>
 {% endblock head %}
 
 {% block content %}
+  {% set home_url = config.base_url ~ "/" %}
+  {% set entries_url = config.base_url ~ "/entries/" %}
   {% set is_indexed = page.extra.status == "published" %}
   {% set title_highlight = page.extra.title_highlight | default(value="") %}
   {% set title_markup = page.title %}
@@ -61,7 +63,7 @@
               <p class="dossier-panel__label">Target Vector</p>
               <ul class="dossier-panel__list dossier-panel__list--lined">
                 {% for cat in page.taxonomies.categories | default(value=[]) %}
-                  <li><a href="/entries/?category={{ cat | slugify }}">{{ cat }}</a></li>
+                  <li><a href="{{ entries_url }}?category={{ cat | slugify }}">{{ cat }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -78,7 +80,7 @@
       </section>
 
       <section class="dossier-panel dossier-panel--seal">
-        <a class="archive-brand archive-brand--panel" href="/" aria-label="The Piker Papers home">
+        <a class="archive-brand archive-brand--panel" href="{{ home_url }}" aria-label="The Piker Papers home">
           <span class="archive-brand__badge" aria-hidden="true">
             <span class="archive-brand__word">PIKER</span>
             <span class="archive-brand__sep">_</span>
@@ -146,7 +148,8 @@
           {% if page.taxonomies.tags | default(value=[]) | length > 0 %}
             <ul class="dossier-inline-tags" {% if is_indexed %}data-pagefind-ignore{% endif %}>
               {% for tag in page.taxonomies.tags | default(value=[]) %}
-                <li><a href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+                {% set tag_slug = tag | slugify %}
+                <li><a href="{{ config.base_url }}/tags/{{ tag_slug }}/">{{ tag }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}

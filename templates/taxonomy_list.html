@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block head %}
+  {% set entries_url = config.base_url ~ "/entries/" %}
   {% if taxonomy.name == "categories" %}
-    <meta http-equiv="refresh" content="0; url=/entries/">
+    <meta http-equiv="refresh" content="0; url={{ entries_url }}">
   {% endif %}
 {% endblock head %}
 
@@ -11,7 +12,7 @@
     <section class="section-head">
       <h1>Categories moved</h1>
       <p>Category browsing now lives inside the All Files archive view.</p>
-      <a href="/entries/">Open all files</a>
+      <a href="{{ entries_url }}">Open all files</a>
     </section>
   {% else %}
     <section class="section-head">
