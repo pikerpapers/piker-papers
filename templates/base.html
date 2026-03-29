@@ -10,17 +10,25 @@
     {% else %}{{ config.title }}{% endif %}
   </title>
   <link rel="stylesheet" href="/site.css">
-  {% if config.extra.sentry_dsn %}
-    {% set sentry_public_key = config.extra.sentry_dsn | split(pat="://") | last | split(pat="@") | first %}
-    <script src="https://js.sentry-cdn.com/{{ sentry_public_key }}.min.js" crossorigin="anonymous"></script>
+  {% if config.extra.sentry_dsn and config.extra.sentry_loader_src %}
+    <script src="{{ config.extra.sentry_loader_src }}" crossorigin="anonymous"></script>
     <script>
       if (window.Sentry) {
-        Sentry.init({
+        const sentryConfig = {
           dsn: "{{ config.extra.sentry_dsn }}",
-          {% if config.extra.sentry_environment %}environment: "{{ config.extra.sentry_environment }}",{% endif %}
           tracesSampleRate: {{ config.extra.sentry_traces_sample_rate }},
           sendDefaultPii: false
-        });
+        };
+
+        {% if config.extra.sentry_environment %}
+          sentryConfig.environment = "{{ config.extra.sentry_environment }}";
+        {% endif %}
+
+        if (typeof Sentry.browserTracingIntegration === "function" && sentryConfig.tracesSampleRate > 0) {
+          sentryConfig.integrations = [Sentry.browserTracingIntegration()];
+        }
+
+        Sentry.init(sentryConfig);
       }
     </script>
   {% endif %}
@@ -42,6 +50,29 @@
   <script defer src="/js/card-media.js"></script>
   <script defer src="/vendor/headroom.min.js"></script>
   <script defer src="/js/header-scroll.js"></script>
+  <script>
+    function updateFooterTimestamp() {
+      const timestamp = document.querySelector("[data-footer-timestamp]");
+
+      if (!timestamp) {
+        return;
+      }
+
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+
+      timestamp.textContent = `${year}.${month}.${day} // ${hours}:${minutes}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateFooterTimestamp();
+      window.setInterval(updateFooterTimestamp, 60000);
+    });
+  </script>
   {% block head %}{% endblock head %}
 </head>
 <body>
@@ -92,7 +123,7 @@
       <div class="site-footer__system">
         <span>STATIC_ARCHIVE</span>
         <span class="site-footer__divider">//</span>
-        <span>ZOLA + PAGEFIND</span>
+        <span data-footer-timestamp>0000.00.00 // 00:00</span>
         <span class="site-footer__divider">//</span>
         <span class="site-footer__status">
           <span class="site-footer__status-dot" aria-hidden="true"></span>
@@ -100,8 +131,8 @@
         </span>
       </div>
       <div class="site-footer__links">
-        <a href="mailto:contact@pikerpapers.example">CONTACT</a>
-        <a href="https://github.com/example/piker-papers" target="_blank" rel="noreferrer noopener">GITHUB</a>
+        <a href="mailto:pikerpapers@gmail.com">CONTACT</a>
+        <a href="https://github.com/pikerpapers/piker-papers" target="_blank" rel="noreferrer noopener">GITHUB</a>
       </div>
     </div>
   </footer>

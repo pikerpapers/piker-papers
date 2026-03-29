@@ -2,5 +2,6 @@ public/
 .zola-cache/
 node_modules/
 .DS_Store
+.tools/bin/
 .tools/tmp/
 local-submit-pipeline/

@@ -1,73 +1,35 @@
 # The Piker Papers
 
-The Piker Papers is a static Zola site for publishing source-backed files, clips, and transcripts with a shared archive-style UI and Pagefind-powered search.
+The Piker Papers is a static archive site built with Zola for publishing source-backed files, clips, and transcripts about Hasan Piker in a structured, searchable format. Each file is a Markdown entry with front matter for title, date, description, taxonomies, status, and sources, and the site renders those entries into the shared archive UI.
 
-## Stack
+## Contributing
 
-- `Zola` for static site generation
-- `Sass` for the site theme
-- `Pagefind` for full-text search
-- Markdown content with front matter under `content/entries/`
-
-## Site Structure
-
-- `Front Page`
-- `All Files`
-- `Advanced Search`
-- individual file pages under `content/entries/`
-- a shared shell in [templates/base.html](/Users/frederikhaaning/Code/piker-papers/templates/base.html)
-
-Category browsing is folded into `All Files`; there is no separate categories experience in the main navigation.
-
-## Content States
-
-Entries currently support:
-
-- `published`
-- `under_review`
-- `retracted`
-
-Retracted files remain available by direct URL but are hidden from normal discovery flows.
-
-## Local Development
-
-```bash
-npm install
-npm run dev
-```
-
-Useful commands:
-
-```bash
-npm run build
-npm run check
-npm run preview
-```
-
-- `npm run build` generates the static site and refreshes the Pagefind index
-- `npm run check` runs content validation and a full build
-- `npm run preview` serves the built output
-
-## Analytics And Monitoring
-
-GA4 and Sentry are both wired through the shared base template and remain disabled until configured in [config.toml](/Users/frederikhaaning/Code/piker-papers/config.toml).
-
-Supported config keys:
+In the future, the `Submit File` page is intended to post directly through the GitHub API and open a pull request automatically. For now, if you want to submit a file, open a pull request and add a new Markdown entry under `content/entries/`. You do not need to touch templates or site code. Create a new file named like `YYYY-MM-DD-short-slug.md`, then include the required front matter fields and the body content. At minimum, each entry needs a `title`, `date`, `description`, `taxonomies` block (`categories`, `severity`, `entry_type`, and usually `tags`), an `[extra]` block with `status` and `schema_version`, and at least one `[[extra.sources]]` item. A minimal example looks like this:
 
 ```toml
++++
+title = "Example File Title"
+date = 2026-03-29
+description = "One-sentence summary of what the file documents."
+template = "entry.html"
+
+[taxonomies]
+categories = ["public-statements"]
+severity = ["high"]
+entry_type = ["video"]
+tags = ["transcript", "clip"]
+
 [extra]
-ga4_measurement_id = ""
-sentry_dsn = ""
-sentry_environment = ""
-sentry_traces_sample_rate = 0.0
+status = "under_review"
+schema_version = 1
+
+[[extra.sources]]
+kind = "video"
+label = "Source clip"
+value = "https://www.youtube.com/watch?v=example&t=123s"
++++
+
+Body text goes here.
 ```
 
-## Publication Notes
-
-Before publishing:
-
-1. Set `base_url` in [config.toml](/Users/frederikhaaning/Code/piker-papers/config.toml) to the real GitHub Pages URL.
-2. Verify any analytics or Sentry settings are intentional.
-3. Build the site with `npm run build`.
-
-The `Submit File` page is intentionally a disabled UI shell at the moment. It is a design and product placeholder, not a live submission pipeline.
+Use the body of the file for the narrative summary, context, and any quoted excerpts. Keep source labels clear and include timestamped URLs where relevant. Open the pull request with the new entry file and any related edits only; the maintainers can review, normalize, and publish from there.

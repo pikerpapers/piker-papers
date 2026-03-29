@@ -4,10 +4,14 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ZOLA_BIN="$ROOT_DIR/.tools/bin/zola"
 
-if [[ ! -x "$ZOLA_BIN" ]]; then
-  echo "Missing Zola binary at $ZOLA_BIN"
-  echo "Expected local binary. Re-download or install Zola first."
-  exit 1
+if [[ -x "$ZOLA_BIN" ]]; then
+  exec "$ZOLA_BIN" "$@"
 fi
 
-exec "$ZOLA_BIN" "$@"
+if command -v zola >/dev/null 2>&1; then
+  exec zola "$@"
+fi
+
+echo "Missing Zola binary at $ZOLA_BIN"
+echo "Install Zola locally or place a binary at .tools/bin/zola."
+exit 1

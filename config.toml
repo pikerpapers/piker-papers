@@ -1,4 +1,4 @@
-base_url = "http://127.0.0.1:1111"
+base_url = "https://pikerpapers.github.io/piker-papers"
 title = "The Piker Papers"
 description = "Structured, searchable files with source-backed documentation."
 default_language = "en"
@@ -28,6 +28,7 @@ anchors = "safe"
 
 [extra]
 ga4_measurement_id = "G-RFR1H71T4Y"
-sentry_dsn = ""
+sentry_loader_src = "https://js-de.sentry-cdn.com/8e2a70880f0e0ffc6ea774b0ab22f8d2.min.js"
+sentry_dsn = "https://8e2a70880f0e0ffc6ea774b0ab22f8d2@o4511129617498112.ingest.de.sentry.io/4511129620709456"
 sentry_environment = ""
 sentry_traces_sample_rate = 0.0
