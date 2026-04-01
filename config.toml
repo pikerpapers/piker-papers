@@ -1,4 +1,4 @@
-base_url = "https://pikerpapers.github.io/piker-papers"
+base_url = "https://pikerpapers.com"
 title = "The Piker Papers"
 description = "Structured, searchable files with source-backed documentation."
 default_language = "en"
