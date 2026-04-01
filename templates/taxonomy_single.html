@@ -2,30 +2,40 @@
 
 {% block head %}
   {% set entries_url = config.base_url ~ "/entries/" %}
-  {% if taxonomy.name == "categories" %}
-    <meta http-equiv="refresh" content="0; url={{ entries_url }}?category={{ term.name | slugify }}">
+  {% if taxonomy.name == "tags" %}
+    <meta http-equiv="refresh" content="0; url={{ entries_url }}?tag={{ term.name | slugify }}">
+  {% elif taxonomy.name == "severity" %}
+    <meta http-equiv="refresh" content="0; url={{ entries_url }}?severity={{ term.name | slugify }}">
+  {% elif taxonomy.name == "entry_type" %}
+    <meta http-equiv="refresh" content="0; url={{ entries_url }}?type={{ term.name | slugify }}">
+  {% else %}
+    <meta http-equiv="refresh" content="0; url={{ entries_url }}">
   {% endif %}
 {% endblock head %}
 
 {% block content %}
-  {% if taxonomy.name == "categories" %}
+  {% if taxonomy.name == "tags" %}
     <section class="section-head">
       <h1>{{ term.name }}</h1>
-      <p>Category browsing now lives inside the All Files archive view.</p>
-      <a href="{{ entries_url }}?category={{ term.name | slugify }}">Open filtered files</a>
+      <p>Tag browsing now lives inside the All Files archive view.</p>
+      <a href="{{ entries_url }}?tag={{ term.name | slugify }}">Open filtered files</a>
+    </section>
+  {% elif taxonomy.name == "severity" %}
+    <section class="section-head">
+      <h1>{{ term.name }}</h1>
+      <p>Severity browsing now lives inside the All Files archive view.</p>
+      <a href="{{ entries_url }}?severity={{ term.name | slugify }}">Open filtered files</a>
+    </section>
+  {% elif taxonomy.name == "entry_type" %}
+    <section class="section-head">
+      <h1>{{ term.name }}</h1>
+      <p>Format browsing now lives inside the All Files archive view.</p>
+      <a href="{{ entries_url }}?type={{ term.name | slugify }}">Open filtered files</a>
     </section>
   {% else %}
     <section class="section-head">
-      <h1>{{ taxonomy.name | capitalize }}: {{ term.name }}</h1>
-      <a href="{{ config.base_url }}/{{ taxonomy.name }}/">Back to {{ taxonomy.name }}</a>
-    </section>
-
-    <section class="card-grid">
-      {% for p in term.pages %}
-        {% if p.extra.status == "published" %}
-          {% include "partials/entry-card.html" %}
-        {% endif %}
-      {% endfor %}
+      <h1>{{ taxonomy.name | capitalize }} moved</h1>
+      <a href="{{ entries_url }}">Open all files</a>
     </section>
   {% endif %}
 {% endblock content %}

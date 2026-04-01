@@ -6,7 +6,6 @@ template = "entry.html"
 draft = true
 
 [taxonomies]
-categories = ["health-policy"]
 severity = ["medium"]
 entry_type = ["forum"]
 tags = ["submission"]

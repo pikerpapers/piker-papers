@@ -2,40 +2,13 @@
 
 {% block head %}
   {% set entries_url = config.base_url ~ "/entries/" %}
-  {% if taxonomy.name == "categories" %}
-    <meta http-equiv="refresh" content="0; url={{ entries_url }}">
-  {% endif %}
+  <meta http-equiv="refresh" content="0; url={{ entries_url }}">
 {% endblock head %}
 
 {% block content %}
-  {% if taxonomy.name == "categories" %}
-    <section class="section-head">
-      <h1>Categories moved</h1>
-      <p>Category browsing now lives inside the All Files archive view.</p>
-      <a href="{{ entries_url }}">Open all files</a>
-    </section>
-  {% else %}
-    <section class="section-head">
-      <h1>{{ taxonomy.name | capitalize }}</h1>
-      <p>Browse terms in this taxonomy.</p>
-    </section>
-
-    <section class="term-grid">
-      {% for term in terms %}
-        {% set_global published_count = 0 %}
-        {% for p in term.pages %}
-          {% if p.extra.status == "published" %}
-            {% set_global published_count = published_count + 1 %}
-          {% endif %}
-        {% endfor %}
-
-        {% if published_count > 0 %}
-          <article class="term-card">
-            <h2><a href="{{ term.permalink }}">{{ term.name }}</a></h2>
-            <p>{{ published_count }} file{% if published_count != 1 %}s{% endif %}</p>
-          </article>
-        {% endif %}
-      {% endfor %}
-    </section>
-  {% endif %}
+  <section class="section-head">
+    <h1>{{ taxonomy.name | capitalize }} moved</h1>
+    <p>Structured browsing now lives inside the All Files archive view.</p>
+    <a href="{{ entries_url }}">Open all files</a>
+  </section>
 {% endblock content %}

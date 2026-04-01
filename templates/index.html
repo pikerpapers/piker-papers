@@ -3,7 +3,7 @@
 {% block content %}
   {% set entries_url = config.base_url ~ "/entries/" %}
   {% set entries = get_section(path="entries/_index.md") %}
-  {% set categories = get_taxonomy(kind="categories") %}
+  {% set tags = get_taxonomy(kind="tags") %}
   {% set_global published_count = 0 %}
   {% set_global source_count = 0 %}
   {% set_global video_count = 0 %}
@@ -131,8 +131,8 @@
               <p>{{ p.description }}</p>
               <div class="dossier-card__foot">
                 <div class="dossier-card__tags">
-                {% for cat in p.taxonomies.categories | default(value=[]) %}
-                  <a href="{{ entries_url }}?category={{ cat | slugify }}">{{ cat }}</a>
+                {% for tag in p.taxonomies.tags | default(value=[]) %}
+                  <a href="{{ entries_url }}?tag={{ tag | slugify }}">{{ tag }}</a>
                 {% endfor %}
                 </div>
                 <a href="{{ p.permalink }}">Access Full Report</a>
@@ -167,7 +167,7 @@
           <h3>Related Dossiers</h3>
         </div>
         <ul class="intel-link-list intel-link-list--metrics">
-          {% for term in categories.items | slice(end=4) %}
+          {% for term in tags.items | slice(end=4) %}
             {% set_global published_count = 0 %}
             {% for p in term.pages %}
               {% if p.extra.status == "published" %}
@@ -176,7 +176,7 @@
             {% endfor %}
             {% if published_count > 0 %}
               <li>
-                <a href="{{ entries_url }}?category={{ term.name | slugify }}">{{ term.name }}</a>
+                <a href="{{ entries_url }}?tag={{ term.name | slugify }}">{{ term.name }}</a>
                 <span class="intel-link-list__count">{{ published_count }}</span>
               </li>
             {% endif %}

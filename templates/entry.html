@@ -58,12 +58,12 @@
             </p>
           </div>
 
-          {% if page.taxonomies.categories | default(value=[]) | length > 0 %}
+          {% if page.taxonomies.tags | default(value=[]) | length > 0 %}
             <div class="dossier-panel__group">
-              <p class="dossier-panel__label">Target Vector</p>
+              <p class="dossier-panel__label">Tag Vectors</p>
               <ul class="dossier-panel__list dossier-panel__list--lined">
-                {% for cat in page.taxonomies.categories | default(value=[]) %}
-                  <li><a href="{{ entries_url }}?category={{ cat | slugify }}">{{ cat }}</a></li>
+                {% for tag in page.taxonomies.tags | default(value=[]) %}
+                  <li><a href="{{ entries_url }}?tag={{ tag | slugify }}">{{ tag }}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -113,14 +113,19 @@
         {% if is_indexed %}
           <span class="visually-hidden" data-pagefind-meta="date">{{ page.date | date(format="%Y-%m-%d") }}</span>
           <span class="visually-hidden" data-pagefind-meta="record_id">PP-FILE-{{ page.slug | upper }}</span>
-          {% if page.taxonomies.categories | default(value=[]) | length > 0 %}
-            <span class="visually-hidden" data-pagefind-meta="category">{{ page.taxonomies.categories.0 }}</span>
+          {% if page.taxonomies.tags | default(value=[]) | length > 0 %}
+            <span class="visually-hidden" data-pagefind-meta="tag">{{ page.taxonomies.tags.0 }}</span>
+            {% for tag in page.taxonomies.tags | default(value=[]) %}
+              <span class="visually-hidden" data-pagefind-filter="tag">{{ tag }}</span>
+            {% endfor %}
           {% endif %}
           {% if page.taxonomies.severity | default(value=[]) | length > 0 %}
             <span class="visually-hidden" data-pagefind-meta="severity">{{ page.taxonomies.severity.0 }}</span>
+            <span class="visually-hidden" data-pagefind-filter="severity">{{ page.taxonomies.severity.0 }}</span>
           {% endif %}
           {% if page.taxonomies.entry_type | default(value=[]) | length > 0 %}
             <span class="visually-hidden" data-pagefind-meta="type">{{ page.taxonomies.entry_type.0 }}</span>
+            <span class="visually-hidden" data-pagefind-filter="type">{{ page.taxonomies.entry_type.0 }}</span>
           {% endif %}
           {% if lead_video_url != "" %}
             <span class="visually-hidden" data-pagefind-meta="media_url">{{ lead_video_url }}</span>
@@ -148,8 +153,7 @@
           {% if page.taxonomies.tags | default(value=[]) | length > 0 %}
             <ul class="dossier-inline-tags" {% if is_indexed %}data-pagefind-ignore{% endif %}>
               {% for tag in page.taxonomies.tags | default(value=[]) %}
-                {% set tag_slug = tag | slugify %}
-                <li><a href="{{ config.base_url }}/tags/{{ tag_slug }}/">{{ tag }}</a></li>
+                <li><a href="{{ entries_url }}?tag={{ tag | slugify }}">{{ tag }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}

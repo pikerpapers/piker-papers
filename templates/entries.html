@@ -20,7 +20,7 @@
       <div class="archive-files-head__copy">
         <p class="archive-files-head__eyebrow">// SECURE_STORAGE / MASTER_ARCHIVE</p>
         <h1>ALL_FILES</h1>
-        <p class="archive-files-head__summary">Access the central archive stream of published dossiers, clips, and transcripts. Filter by category below and sort the index by date or severity.</p>
+        <p class="archive-files-head__summary">Access the central archive stream of published dossiers, clips, and transcripts. Filter by tag, then narrow by format or severity.</p>
       </div>
 
       <div class="archive-files-head__tools">
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div id="entries-category-filters" class="archive-files-filter-palette" aria-label="Category filters"></div>
+      <div id="entries-filter-groups" class="archive-files-filter-palette" aria-label="Archive filters"></div>
     </section>
 
     <p id="entries-empty" class="archive-files-empty" hidden>No files match the current filter.</p>
@@ -63,7 +63,8 @@
           <article
             class="archive-record"
             data-entry-card
-            data-entry-categories="{% for cat in p.taxonomies.categories | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ cat | lower }}{% endfor %}"
+            data-entry-tags="{% for tag in p.taxonomies.tags | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ tag | lower }}{% endfor %}"
+            data-entry-type="{% if p.taxonomies.entry_type and p.taxonomies.entry_type | length > 0 %}{{ p.taxonomies.entry_type.0 | lower }}{% endif %}"
             data-entry-date="{{ p.date | date(format="%Y-%m-%d") }}"
             data-entry-title="{{ p.title | upper }}"
             data-entry-severity="{% if p.taxonomies.severity and p.taxonomies.severity | length > 0 %}{{ p.taxonomies.severity.0 | lower }}{% endif %}"

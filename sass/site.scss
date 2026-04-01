@@ -63,6 +63,10 @@ select {
   font: inherit;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -1188,8 +1192,40 @@ li {
 }
 
 .archive-files-active-list,
-.archive-files-filter-palette,
 .search-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.archive-files-filter-palette {
+  display: grid;
+  gap: 1rem;
+}
+
+.archive-files-filter-group {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.archive-files-filter-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.archive-files-filter-group__head h3 {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.archive-files-filter-group__utilities,
+.archive-files-filter-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;

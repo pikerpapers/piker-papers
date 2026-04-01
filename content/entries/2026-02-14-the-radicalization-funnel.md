@@ -5,7 +5,6 @@ description = "Discussion excerpts from The Deprogram concerning political messa
 template = "entry.html"
 
 [taxonomies]
-categories = ["public-statements"]
 severity = ["high"]
 entry_type = ["podcast"]
 tags = ["deprogram", "transcript", "messaging"]

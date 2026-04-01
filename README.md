@@ -4,7 +4,7 @@ The Piker Papers is a static archive site built with Zola for publishing source-
 
 ## Contributing
 
-In the future, the `Submit File` page is intended to post directly through the GitHub API and open a pull request automatically. For now, if you want to submit a file, open a pull request and add a new Markdown entry under `content/entries/`. You do not need to touch templates or site code. Create a new file named like `YYYY-MM-DD-short-slug.md`, then include the required front matter fields and the body content. At minimum, each entry needs a `title`, `date`, `description`, `taxonomies` block (`categories`, `severity`, `entry_type`, and usually `tags`), an `[extra]` block with `status` and `schema_version`, and at least one `[[extra.sources]]` item. A minimal example looks like this:
+In the future, the `Submit File` page is intended to post directly through the GitHub API and open a pull request automatically. For now, if you want to submit a file, open a pull request and add a new Markdown entry under `content/entries/`. You do not need to touch templates or site code. Create a new file named like `YYYY-MM-DD-short-slug.md`, then include the required front matter fields and the body content. At minimum, each entry needs a `title`, `date`, `description`, a `taxonomies` block (`tags`, `severity`, and `entry_type`), an `[extra]` block with `status` and `schema_version`, and at least one `[[extra.sources]]` item. A minimal example looks like this:
 
 ```toml
 +++
@@ -14,7 +14,6 @@ description = "One-sentence summary of what the file documents."
 template = "entry.html"
 
 [taxonomies]
-categories = ["public-statements"]
 severity = ["high"]
 entry_type = ["video"]
 tags = ["transcript", "clip"]

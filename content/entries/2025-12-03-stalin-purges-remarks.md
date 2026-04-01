@@ -5,7 +5,6 @@ description = "Livestream remarks in which Hasan Piker says he understands how p
 template = "entry.html"
 
 [taxonomies]
-categories = ["public-statements"]
 severity = ["high"]
 entry_type = ["livestream"]
 tags = ["transcript", "stalin", "ussr"]

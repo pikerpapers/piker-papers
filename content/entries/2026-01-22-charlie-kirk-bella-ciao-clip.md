@@ -5,7 +5,6 @@ description = "Clip circulated online showing Hasan Piker opening a stream while
 template = "entry.html"
 
 [taxonomies]
-categories = ["public-statements"]
 severity = ["high"]
 entry_type = ["livestream"]
 tags = ["bella-ciao", "charlie-kirk", "clip"]

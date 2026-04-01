@@ -21,7 +21,7 @@ for entry in "$ENTRY_DIR"/*.md; do
     "date =" \
     "description =" \
     "[taxonomies]" \
-    "categories =" \
+    "tags =" \
     "severity =" \
     "entry_type =" \
     "[extra]" \

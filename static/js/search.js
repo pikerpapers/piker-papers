@@ -31,7 +31,7 @@
   const state = {
     query: (params.get("q") || "").trim(),
     filters: {
-      category: (params.get("category") || "").trim(),
+      tag: (params.get("tag") || params.get("category") || "").trim(),
       severity: (params.get("severity") || "").trim(),
       type: (params.get("type") || "").trim()
     },
@@ -40,9 +40,9 @@
   };
 
   const filterLabels = {
-    category: "Category",
+    tag: "Tags",
     severity: "Severity",
-    type: "Type"
+    type: "Format"
   };
 
   const sortLabels = {
@@ -144,7 +144,7 @@
   };
 
   const renderSuggestions = () => {
-    const entries = sortFilterValues("category", filterIndex.category || {}).slice(0, 4);
+    const entries = sortFilterValues("tag", filterIndex.tag || {}).slice(0, 4);
 
     if (entries.length === 0) {
       suggestionsRoot.innerHTML = "";
@@ -152,7 +152,7 @@
     }
 
     suggestionsRoot.innerHTML = entries.map(([value]) => {
-      const active = state.filters.category === value;
+      const active = state.filters.tag === value;
 
       return `
         <button
@@ -167,7 +167,7 @@
   };
 
   const renderFilters = () => {
-    const groups = ["category", "severity", "type"]
+    const groups = ["tag", "severity", "type"]
       .map((key) => {
         const entries = sortFilterValues(key, filterIndex[key] || {});
 
@@ -266,7 +266,7 @@
 
   const renderMedia = (result, layout) => {
     const thumbnail = youtubeThumbnail(result.meta.media_url || "");
-    const categoryLabel = escapeHtml((result.meta.category || "archive-node").replace(/-/g, "_").toUpperCase());
+    const tagLabel = escapeHtml((result.meta.tag || "archive-node").replace(/-/g, "_").toUpperCase());
     const severity = escapeHtml((result.meta.severity || "archive").replace(/-/g, "_").toUpperCase());
 
     if (thumbnail) {
@@ -280,7 +280,7 @@
 
     return `
       <div class="deep-search-result__placeholder deep-search-result__placeholder--${layout}">
-        <span>${categoryLabel}</span>
+        <span>${tagLabel}</span>
         <div></div>
       </div>
     `;
@@ -296,8 +296,8 @@
       const date = result.meta.date ? `MODIFIED: ${escapeHtml(result.meta.date)}` : "MODIFIED: UNKNOWN";
       const summary = result.meta.summary ? `<p class="deep-search-result__summary">${escapeHtml(result.meta.summary)}</p>` : "";
       const excerpt = result.excerpt ? `<div class="deep-search-result__excerpt">${result.excerpt}</div>` : "";
-      const category = result.meta.category
-        ? `<span>${escapeHtml(result.meta.category).replace(/-/g, "_").toUpperCase()}</span>`
+      const tag = result.meta.tag
+        ? `<span>${escapeHtml(result.meta.tag).replace(/-/g, "_").toUpperCase()}</span>`
         : "";
       const severity = result.meta.severity
         ? `<span>${escapeHtml(result.meta.severity).replace(/-/g, "_").toUpperCase()}</span>`
@@ -323,7 +323,7 @@
                 <h3>${title}</h3>
 
                 <div class="deep-search-result__tags">
-                  ${category}
+                  ${tag}
                   ${severity}
                   ${type}
                 </div>
@@ -440,7 +440,7 @@
     }
 
     const value = button.dataset.suggestionValue;
-    state.filters.category = state.filters.category === value ? "" : value;
+    state.filters.tag = state.filters.tag === value ? "" : value;
     if (!state.query) {
       state.query = value.replace(/-/g, " ");
       queryInput.value = state.query.toUpperCase();

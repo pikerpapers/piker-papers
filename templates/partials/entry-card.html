@@ -22,7 +22,7 @@
 <article
   class="entry-card{% if has_video %} entry-card--has-media{% endif %}"
   data-entry-card
-  data-entry-categories="{% for cat in p.taxonomies.categories | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ cat | lower }}{% endfor %}"
+  data-entry-tags="{% for tag in p.taxonomies.tags | default(value=[]) %}{% if not loop.first %}|{% endif %}{{ tag | lower }}{% endfor %}"
   {% if has_video and first_video_url %}data-card-video-url="{{ first_video_url }}"{% endif %}
   {% if has_video and first_video_label %}data-card-video-label="{{ first_video_label }}"{% endif %}
 >
@@ -48,8 +48,8 @@
 
     <div class="entry-card__foot">
       <ul class="entry-card__tags" aria-label="File metadata">
-        {% for cat in p.taxonomies.categories | default(value=[]) %}
-          <li>{{ cat }}</li>
+        {% for tag in p.taxonomies.tags | default(value=[]) %}
+          <li>{{ tag }}</li>
         {% endfor %}
       </ul>
       <a class="entry-card__link" href="{{ p.permalink }}">Access</a>

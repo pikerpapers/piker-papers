@@ -6,7 +6,6 @@ template = "entry.html"
 in_search_index = false
 
 [taxonomies]
-categories = ["public-statements"]
 severity = ["critical"]
 entry_type = ["town-hall"]
 tags = ["retraction"]
