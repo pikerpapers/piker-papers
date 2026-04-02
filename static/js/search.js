@@ -1,4 +1,5 @@
 (function () {
+  const pageRoot = document.querySelector(".deep-search-page");
   const queryInput = document.getElementById("archive-search-query");
   const submitButton = document.getElementById("archive-search-submit");
   const filtersRoot = document.getElementById("search-filters");
@@ -8,10 +9,11 @@
   const suggestionsRoot = document.getElementById("search-suggestions");
   const filterToggle = document.getElementById("search-filter-toggle");
   const sortButton = document.getElementById("search-sort-button");
-  const pagefindJsUrl = window.__PAGEFIND_JS_URL;
-  const pagefindBaseUrl = window.__PAGEFIND_BASE_URL;
+  const pagefindJsUrl = pageRoot?.dataset.pagefindJsUrl;
+  const pagefindBaseUrl = pageRoot?.dataset.pagefindBaseUrl;
 
   if (
+    !pageRoot ||
     !queryInput ||
     !submitButton ||
     !filtersRoot ||

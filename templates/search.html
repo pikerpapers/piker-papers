@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
 {% block head %}
-  {% set pagefind_js_url = config.base_url ~ "/pagefind/pagefind.js" %}
-  {% set pagefind_base_url = config.base_url ~ "/pagefind/" %}
-  <script>
-    window.__PAGEFIND_JS_URL = "{{ pagefind_js_url }}";
-    window.__PAGEFIND_BASE_URL = "{{ pagefind_base_url }}";
-  </script>
   <script defer src="{{ config.base_url }}/js/search.js"></script>
 {% endblock head %}
 
 {% block content %}
-  <article class="deep-search-page">
+  <article
+    class="deep-search-page"
+    data-pagefind-js-url="{{ config.base_url }}/pagefind/pagefind.js"
+    data-pagefind-base-url="{{ config.base_url }}/pagefind/"
+  >
     <section class="deep-search-hero">
       <div class="deep-search-hero__inner">
         <div class="deep-search-hero__head">
