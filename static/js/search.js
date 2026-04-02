@@ -9,8 +9,21 @@
   const suggestionsRoot = document.getElementById("search-suggestions");
   const filterToggle = document.getElementById("search-filter-toggle");
   const sortButton = document.getElementById("search-sort-button");
-  const pagefindJsUrl = pageRoot?.dataset.pagefindJsUrl;
-  const pagefindBaseUrl = pageRoot?.dataset.pagefindBaseUrl;
+  const normalizeToCurrentOrigin = (value) => {
+    if (!value) {
+      return "";
+    }
+
+    try {
+      const parsed = new URL(value, window.location.href);
+      return `${window.location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch (_error) {
+      return value;
+    }
+  };
+
+  const pagefindJsUrl = normalizeToCurrentOrigin(pageRoot?.dataset.pagefindJsUrl);
+  const pagefindBaseUrl = normalizeToCurrentOrigin(pageRoot?.dataset.pagefindBaseUrl);
 
   if (
     !pageRoot ||
