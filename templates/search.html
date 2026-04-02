@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block head %}
+  {% set pagefind_js_url = config.base_url ~ "/pagefind/pagefind.js" %}
+  {% set pagefind_base_url = config.base_url ~ "/pagefind/" %}
   <script>
-    window.__PAGEFIND_JS_URL = "{{ config.base_url }}/pagefind/pagefind.js";
-    window.__PAGEFIND_BASE_URL = "{{ config.base_url }}/pagefind/";
+    window.__PAGEFIND_JS_URL = "{{ pagefind_js_url }}";
+    window.__PAGEFIND_BASE_URL = "{{ pagefind_base_url }}";
   </script>
   <script defer src="{{ config.base_url }}/js/search.js"></script>
 {% endblock head %}
