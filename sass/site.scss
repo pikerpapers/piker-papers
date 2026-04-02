@@ -3815,6 +3815,30 @@ li {
     padding-top: 1rem;
   }
 
+  .dossier-page__main {
+    order: 1;
+  }
+
+  .dossier-page__rail {
+    order: 2;
+  }
+
+  .dossier-page__meta {
+    order: 3;
+  }
+
+  .dossier-panel--meta {
+    order: 3;
+  }
+
+  .dossier-actions {
+    order: 1;
+  }
+
+  .dossier-panel--seal {
+    order: 2;
+  }
+
   .dossier-title-block h1,
   .dossier-hero h1,
   .section-head h1,
