@@ -8,6 +8,7 @@
   {% set entries_root = get_section(path="entries/_index.md") %}
   {% set file_pages = paginator.pages | default(value=section.pages) %}
   {% set_global published_total = 0 %}
+  {% set current_page_count = file_pages | length %}
 
   {% for p in entries_root.pages %}
     {% if p.extra.status == "published" %}
@@ -25,6 +26,11 @@
 
       <div class="archive-files-head__tools">
         <p class="archive-files-head__stability">PUBLISHED_INDEX: {{ published_total }} FILES</p>
+        {% if paginator and paginator.number_pagers > 1 %}
+          <p class="archive-files-head__stability archive-files-head__stability--secondary">
+            PAGE_SIZE: {{ current_page_count }} // PAGE {{ paginator.current_index }} OF {{ paginator.number_pagers }}
+          </p>
+        {% endif %}
         <div class="archive-files-sort" role="toolbar" aria-label="Archive sort controls">
           <button class="archive-files-sort__button is-active" type="button" data-sort="date">SORT_BY_DATE</button>
           <button class="archive-files-sort__button" type="button" data-sort="severity">SORT_BY_SEVERITY</button>
@@ -124,15 +130,7 @@
             <span class="archive-files-pagination__button archive-files-pagination__button--disabled">PREV_PAGE</span>
           {% endif %}
 
-          {% for pager in paginator.pagers %}
-            {% if pager.index >= paginator.current_index - 1 and pager.index <= paginator.current_index + 1 %}
-              {% if pager.index == paginator.current_index %}
-                <span class="archive-files-pagination__button archive-files-pagination__button--current">{{ pager.index }}</span>
-              {% else %}
-                <a class="archive-files-pagination__button archive-files-pagination__button--muted" href="{{ pager.permalink }}">{{ pager.index }}</a>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
+          <span class="archive-files-pagination__button archive-files-pagination__button--current">{{ paginator.current_index }}</span>
 
           {% if paginator.next %}
             <a class="archive-files-pagination__button" href="{{ paginator.next }}">NEXT_PAGE</a>

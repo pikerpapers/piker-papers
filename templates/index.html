@@ -28,6 +28,7 @@
   {% set_global hero_video_url = "" %}
   {% set_global hero_video_label = "" %}
   {% set_global stream_index = 0 %}
+  {% set_global archive_stream_index = 0 %}
 
   {% for featured in entries.pages %}
     {% if featured.extra.status == "published" and featured.extra.featured | default(value=false) %}
@@ -194,7 +195,10 @@
     <div class="card-grid card-grid--dossiers">
       {% for p in entries.pages %}
         {% if p.extra.status == "published" %}
-          {% include "partials/entry-card.html" %}
+          {% set_global archive_stream_index = archive_stream_index + 1 %}
+          {% if archive_stream_index <= 6 %}
+            {% include "partials/entry-card.html" %}
+          {% endif %}
         {% endif %}
       {% endfor %}
     </div>
