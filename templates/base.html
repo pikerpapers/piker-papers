@@ -1,5 +1,11 @@
 <!doctype html>
-<html lang="{{ lang }}">
+<html
+  lang="{{ lang }}"
+  {% if config.extra.sentry_dsn and config.extra.sentry_loader_src %}
+    data-sentry-dsn="{{ config.extra.sentry_dsn }}"
+    {% if config.extra.sentry_environment %}data-sentry-environment="{{ config.extra.sentry_environment }}"{% endif %}
+  {% endif %}
+>
 <head>
   {% set home_url = config.base_url ~ "/" %}
   {% set entries_url = config.base_url ~ "/entries/" %}
@@ -18,21 +24,25 @@
     <script src="{{ config.extra.sentry_loader_src }}" crossorigin="anonymous"></script>
     <script>
       if (window.Sentry) {
+        const sentryRoot = document.documentElement;
+        const sentryDsn = sentryRoot.dataset.sentryDsn;
         const sentryConfig = {
-          dsn: "{{ config.extra.sentry_dsn }}",
+          dsn: sentryDsn,
           tracesSampleRate: {{ config.extra.sentry_traces_sample_rate }},
           sendDefaultPii: false
         };
 
-        {% if config.extra.sentry_environment %}
-          sentryConfig.environment = "{{ config.extra.sentry_environment }}";
-        {% endif %}
+        if (sentryRoot.dataset.sentryEnvironment) {
+          sentryConfig.environment = sentryRoot.dataset.sentryEnvironment;
+        }
 
         if (typeof Sentry.browserTracingIntegration === "function" && sentryConfig.tracesSampleRate > 0) {
           sentryConfig.integrations = [Sentry.browserTracingIntegration()];
         }
 
-        Sentry.init(sentryConfig);
+        if (sentryConfig.dsn) {
+          Sentry.init(sentryConfig);
+        }
       }
     </script>
   {% endif %}
